@@ -293,6 +293,18 @@
                 display: none;
             }
         }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            display: none;
+            z-index: 999;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
     </style>
 </head>
 
@@ -374,6 +386,7 @@
             <span class="ms-3">Version 1.0.0</span>
         </div>
     </div>
+    <div class="sidebar-overlay"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -382,16 +395,24 @@
             const hamburger = document.querySelector('.hamburger');
             const sidebar = document.querySelector('.sidebar');
             const mainWrapper = document.querySelector('.main-wrapper');
+            const overlay = document.querySelector('.sidebar-overlay');
 
             hamburger.addEventListener('click', function() {
 
                 if (window.innerWidth <= 768) {
                     sidebar.classList.toggle('show');
+                    overlay.classList.toggle('show');
                 } else {
                     sidebar.classList.toggle('closed');
                     mainWrapper.classList.toggle('full');
                 }
 
+
+            });
+
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
             });
         });
     </script>
