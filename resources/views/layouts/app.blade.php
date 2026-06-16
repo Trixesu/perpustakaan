@@ -30,6 +30,11 @@
             display: flex;
             flex-direction: column;
             z-index: 100;
+            transition: left 0.3s;
+        }
+
+        .sidebar.closed {
+            left: -240px;
         }
 
         .sidebar-brand {
@@ -50,7 +55,7 @@
         }
 
         .sidebar-menu {
-            padding: 12px 12px;
+            padding: 12px;
             flex: 1;
         }
 
@@ -109,12 +114,33 @@
             color: white;
         }
 
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
         /* Main */
         .main-wrapper {
             margin-left: 240px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: margin-left 0.3s;
+        }
+
+        .main-wrapper.full {
+            margin-left: 0;
         }
 
         /* Topbar */
@@ -127,7 +153,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
             position: sticky;
             top: 0;
-            z-index: 99;
+            z-index: 98;
         }
 
         .topbar-left {
@@ -149,30 +175,6 @@
             color: #64748b;
             cursor: pointer;
             padding: 4px;
-        }
-
-        .search-wrap {
-            display: flex;
-            align-items: center;
-            background: #f1f5f9;
-            border-radius: 24px;
-            padding: 8px 16px;
-            gap: 8px;
-            width: 280px;
-        }
-
-        .search-wrap i {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        .search-wrap input {
-            background: none;
-            border: none;
-            outline: none;
-            font-size: 0.85rem;
-            color: #475569;
-            width: 100%;
         }
 
         .topbar-right {
@@ -211,7 +213,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
         }
 
         .admin-avatar {
@@ -254,17 +255,47 @@
             background: white;
         }
 
-        /* Card */
         .card {
             border-radius: 12px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -240px;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main-wrapper {
+                margin-left: 0 !important;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .topbar {
+                padding: 10px 15px;
+            }
+
+            .admin-name,
+            .admin-role {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <div class="d-flex align-items-center gap-2 mb-1">
                 <i class="bi bi-book-half" style="color:#3b82f6; font-size:1.3rem;"></i>
@@ -303,10 +334,12 @@
     </div>
 
     <!-- Main -->
-    <div class="main-wrapper">
+    <div class="main-wrapper" id="mainWrapper">
         <div class="topbar">
             <div class="topbar-left">
-                <button class="hamburger"><i class="bi bi-list"></i></button>
+                <button class="hamburger" id="hamburger">
+                    <i class="bi bi-list"></i>
+                </button>
                 <span class="topbar-title">@yield('title')</span>
             </div>
             <div class="topbar-right">
@@ -331,6 +364,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             @endif
+            @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm">
+                <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            @endif
             @yield('content')
         </div>
 
@@ -341,6 +380,30 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const mainWrapper = document.getElementById('mainWrapper');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                // Mobile: sidebar muncul sebagai overlay
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('show');
+            } else {
+                // Desktop: sidebar toggle
+                sidebar.classList.toggle('closed');
+                mainWrapper.classList.toggle('full');
+            }
+        });
+
+        // Klik overlay untuk tutup sidebar di mobile
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+    </script>
 </body>
 
 </html>
