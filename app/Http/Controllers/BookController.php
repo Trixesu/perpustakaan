@@ -31,7 +31,7 @@ class BookController extends Controller
             'year'        => 'required|digits:4',
         ]);
 
-        Book::create($request->all());
+        Book::create($request->validated());
         return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan!');
     }
 
@@ -52,12 +52,15 @@ class BookController extends Controller
             'year'        => 'required|digits:4',
         ]);
 
-        $book->update($request->all());
+        $book->update($request->validated());
         return redirect()->route('books.index')->with('success', 'Buku berhasil diupdate!');
     }
 
     public function destroy(Book $book)
     {
+        if ($book->loans()->where('status', 'borrowed')->exists()) {
+            return redirect()->back()->with('error', 'Buku sedang dipinjam, tidak bisa dihapus!');
+        }
         $book->delete();
         return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus!');
     }

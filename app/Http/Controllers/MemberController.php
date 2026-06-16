@@ -27,7 +27,7 @@ class MemberController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        Member::create($request->all());
+        Member::create($request->validated());
         return redirect()->route('members.index')->with('success', 'Anggota berhasil ditambahkan!');
     }
 
@@ -45,12 +45,15 @@ class MemberController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        $member->update($request->all());
+        $member->update($request->validated());
         return redirect()->route('members.index')->with('success', 'Anggota berhasil diupdate!');
     }
 
     public function destroy(Member $member)
     {
+        if ($member->loans()->where('status', 'borrowed')->exists()) {
+            return redirect()->back()->with('error', 'Anggota masih memiliki peminjaman aktif, tidak bisa dihapus!');
+        }
         $member->delete();
         return redirect()->route('members.index')->with('success', 'Anggota berhasil dihapus!');
     }

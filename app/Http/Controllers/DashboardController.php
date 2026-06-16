@@ -22,6 +22,7 @@ class DashboardController extends Controller
         // Total denda bulan ini
         $totalFines = Fine::where('status', 'unpaid')
             ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
             ->sum('amount');
 
         // Anggota terlambat
@@ -52,17 +53,28 @@ class DashboardController extends Controller
             ->get();
 
         // Data grafik peminjaman per bulan
-        $loanChart = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $loanChart[] = Loan::whereMonth('created_at', $i)
-                ->whereYear('created_at', Carbon::now()->year)
-                ->count();
-        }
+        // Data grafik peminjaman per bulan (1 query)
+        $loanChart = array_fill(0, 12, 0);
+        Loan::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy('month')
+            ->get()
+            ->each(function ($row) use (&$loanChart) {
+                $loanChart[$row->month - 1] = $row->total;
+            });
 
         return view('dashboard', compact(
-            'totalCategories', 'totalBooks', 'totalMembers', 'activeLoans',
-            'totalFines', 'lateLoans', 'recentLoans', 'popularBooks',
-            'newMembers', 'lateMembers', 'loanChart'
+            'totalCategories',
+            'totalBooks',
+            'totalMembers',
+            'activeLoans',
+            'totalFines',
+            'lateLoans',
+            'recentLoans',
+            'popularBooks',
+            'newMembers',
+            'lateMembers',
+            'loanChart'
         ));
     }
 }
