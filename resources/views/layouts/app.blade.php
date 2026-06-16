@@ -376,10 +376,23 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('closed');
-            document.querySelector('.main-wrapper').classList.toggle('full');
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const sidebar = document.querySelector('.sidebar');
+            const mainWrapper = document.querySelector('.main-wrapper');
+
+            hamburger.addEventListener('click', function() {
+
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('show');
+                } else {
+                    sidebar.classList.toggle('closed');
+                    mainWrapper.classList.toggle('full');
+                }
+
+            });
         });
     </script>
 </body>
