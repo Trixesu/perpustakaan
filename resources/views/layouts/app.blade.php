@@ -30,6 +30,11 @@
             display: flex;
             flex-direction: column;
             z-index: 100;
+            transition: 0.3s;
+        }
+
+        .sidebar.closed {
+            left: -240px;
         }
 
         .sidebar-brand {
@@ -115,6 +120,11 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .main-wrapper.full {
+            margin-left: 0;
         }
 
         /* Topbar */
@@ -261,10 +271,6 @@
 
         @media (max-width: 768px) {
 
-            .sidebar {
-                display: none;
-            }
-
             .main-wrapper {
                 margin-left: 0;
             }
@@ -364,6 +370,12 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('closed');
+            document.querySelector('.main-wrapper').classList.toggle('full');
+        });
+    </script>
 </body>
 
 </html>
