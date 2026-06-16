@@ -29,16 +29,7 @@
             left: 0;
             display: flex;
             flex-direction: column;
-            z-index: 1000;
-            transition: 0.3s;
-        }
-
-        .sidebar-show {
-            left: 0;
-        }
-
-        .sidebar.closed {
-            left: -240px;
+            z-index: 100;
         }
 
         .sidebar-brand {
@@ -120,15 +111,10 @@
 
         /* Main */
         .main-wrapper {
-            margin-left: 0px;
+            margin-left: 240px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: 0.3s;
-        }
-
-        .main-wrapper.full {
-            margin-left: 0;
         }
 
         /* Topbar */
@@ -141,7 +127,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
             position: sticky;
             top: 0;
-            z-index: 1100;
+            z-index: 99;
         }
 
         .topbar-left {
@@ -162,8 +148,6 @@
             font-size: 1.2rem;
             color: #64748b;
             cursor: pointer;
-            position: relative;
-            z-index: 1200;
             padding: 4px;
         }
 
@@ -274,37 +258,6 @@
         .card {
             border-radius: 12px !important;
         }
-
-        @media (max-width: 768px) {
-
-            .main-wrapper {
-                margin-left: 0;
-            }
-
-            .main-content {
-                padding: 15px;
-            }
-
-            .topbar {
-                padding: 10px 15px;
-            }
-
-            .admin-role {
-                display: none;
-            }
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .4);
-            display: none;
-            z-index: 999;
-        }
-
-        .sidebar-overlay.show {
-            display: block;
-        }
     </style>
 </head>
 
@@ -386,36 +339,8 @@
             <span class="ms-3">Version 1.0.0</span>
         </div>
     </div>
-    <div class="sidebar-overlay"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.querySelector('.hamburger');
-            const sidebar = document.querySelector('.sidebar');
-            const mainWrapper = document.querySelector('.main-wrapper');
-            const overlay = document.querySelector('.sidebar-overlay');
-
-            hamburger.addEventListener('click', function() {
-
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.toggle('show');
-                    overlay.classList.toggle('show');
-                } else {
-                    sidebar.classList.toggle('closed');
-                    mainWrapper.classList.toggle('full');
-                }
-
-
-            });
-
-            overlay.addEventListener('click', function() {
-                sidebar.classList.remove('show');
-                overlay.classList.remove('show');
-            });
-        });
-    </script>
 </body>
 
 </html>
