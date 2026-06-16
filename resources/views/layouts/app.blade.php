@@ -29,8 +29,12 @@
             left: 0;
             display: flex;
             flex-direction: column;
-            z-index: 100;
+            z-index: 1000;
             transition: 0.3s;
+        }
+
+        .sidebar-show {
+            left: 0;
         }
 
         .sidebar.closed {
@@ -116,7 +120,7 @@
 
         /* Main */
         .main-wrapper {
-            margin-left: 240px;
+            margin-left: 0px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -137,7 +141,7 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
             position: sticky;
             top: 0;
-            z-index: 99;
+            z-index: 1100;
         }
 
         .topbar-left {
@@ -158,6 +162,8 @@
             font-size: 1.2rem;
             color: #64748b;
             cursor: pointer;
+            position: relative;
+            z-index: 1200;
             padding: 4px;
         }
 
