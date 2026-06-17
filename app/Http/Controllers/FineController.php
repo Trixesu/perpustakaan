@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fine;
+use App\Models\Loan;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class FineController extends Controller
 {
@@ -16,6 +18,8 @@ class FineController extends Controller
     public function pay(Fine $fine)
     {
         $fine->update(['status' => 'paid']);
-        return redirect()->route('fines.index')->with('success', 'Denda berhasil dibayar!');
+
+        return redirect()->route('fines.index')
+            ->with('success', 'Denda berhasil dibayar!');
     }
 }
