@@ -52,7 +52,6 @@ class LoanController extends Controller
 
     public function return(Loan $loan)
     {
-        // Mencegah buku dikembalikan dua kali
         if ($loan->status === 'returned') {
             return redirect()->route('loans.index')
                 ->with('error', 'Buku ini sudah dikembalikan sebelumnya!');
@@ -79,6 +78,8 @@ class LoanController extends Controller
                     'status' => 'unpaid',
                 ]
             );
+        } else {
+            Fine::where('loan_id', $loan->id)->delete();
         }
 
         return redirect()->route('loans.index')
