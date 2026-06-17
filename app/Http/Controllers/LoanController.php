@@ -26,24 +26,40 @@ class LoanController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'book_id'   => 'required|exists:books,id',
             'member_id' => 'required|exists:members,id',
             'loan_date' => 'required|date',
             'due_date'  => 'required|date|after:loan_date',
         ]);
 
-        $book = Book::findOrFail($request->book_id);
+        $book = Book::findOrFail($validated['book_id']);
+
+        if ($book->stock <= 0) {
+            return redirect()->back()
+                ->with('error', 'Stok buku tidak tersedia!');
+        }
+
         $book->decrement('stock');
 
-        Loan::create($request->all());
-        return redirect()->route('loans.index')->with('success', 'Peminjaman berhasil dicatat!');
+        $validated['status'] = 'borrowed';
+
+        Loan::create($validated);
+
+        return redirect()->route('loans.index')
+            ->with('success', 'Peminjaman berhasil dicatat!');
     }
 
     public function return(Loan $loan)
     {
-        $returnDate = Carbon::now();
-        $dueDate = Carbon::parse($loan->due_date);
+        // Mencegah buku dikembalikan dua kali
+        if ($loan->status === 'returned') {
+            return redirect()->route('loans.index')
+                ->with('error', 'Buku ini sudah dikembalikan sebelumnya!');
+        }
+
+        $returnDate = Carbon::today();
+        $dueDate = Carbon::parse($loan->due_date)->startOfDay();
 
         $loan->update([
             'return_date' => $returnDate,
@@ -53,15 +69,19 @@ class LoanController extends Controller
         $loan->book->increment('stock');
 
         if ($returnDate->gt($dueDate)) {
-            $daysLate = $returnDate->diffInDays($dueDate);
-            Fine::create([
-                'loan_id'   => $loan->id,
-                'days_late' => $daysLate,
-                'amount'    => $daysLate * 1000,
-                'status'    => 'unpaid',
-            ]);
+            $daysLate = (int) $dueDate->diffInDays($returnDate);
+
+            Fine::updateOrCreate(
+                ['loan_id' => $loan->id],
+                [
+                    'days_late' => $daysLate,
+                    'amount' => $daysLate * 1000,
+                    'status' => 'unpaid',
+                ]
+            );
         }
 
-        return redirect()->route('loans.index')->with('success', 'Pengembalian berhasil dicatat!');
+        return redirect()->route('loans.index')
+            ->with('success', 'Pengembalian berhasil dicatat!');
     }
 }
