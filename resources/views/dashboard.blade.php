@@ -160,33 +160,33 @@
                 </div>
                 @forelse($recentLoans as $loan)
                 @php
-                    $bgColor = $loan->status == 'returned' ? '#f0fdf4' : ($loan->due_date < now() ? '#fef2f2' : '#eff6ff');
-                    $iconColor = $loan->status == 'returned' ? '#22c55e' : ($loan->due_date < now() ? '#ef4444' : '#3b82f6');
-                    $icon = $loan->status == 'returned' ? 'check-circle' : ($loan->due_date < now() ? 'exclamation-circle' : 'book');
-                    $styleDiv = "background-color:{$bgColor}; flex-shrink:0;";
-                    $styleIcon = "color:{$iconColor}; font-size:0.8rem;";
-                @endphp
-                <div class="d-flex align-items-start gap-2 mb-3">
-                    <div class="p-2 rounded-3 mt-1" style="{{ $styleDiv }}">
-                        <i class="bi bi-{{ $icon }}" style="{{ $styleIcon }}"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <div class="small fw-semibold">{{ $loan->member->name }}</div>
-                        <div class="text-muted" style="font-size:0.75rem;">
-                            @if($loan->status == 'returned')
-                                mengembalikan "{{ Str::limit($loan->book->title, 22) }}"
-                            @elseif($loan->due_date < now())
-                                terlambat mengembalikan "{{ Str::limit($loan->book->title, 22) }}"
-                            @else
-                                meminjam "{{ Str::limit($loan->book->title, 22) }}"
-                            @endif
-                        </div>
-                        <div class="text-muted" style="font-size:0.72rem;">{{ $loan->created_at->format('d M Y') }}</div>
-                    </div>
-                </div>
-                @empty
-                <p class="text-muted small text-center mt-4">Belum ada aktivitas.</p>
-                @endforelse
+                $bgColor = $loan->status == 'returned' ? '#f0fdf4' : ($loan->due_date < now() ? '#fef2f2' : '#eff6ff' );
+                    $iconColor=$loan->status == 'returned' ? '#22c55e' : ($loan->due_date < now() ? '#ef4444' : '#3b82f6' );
+                        $icon=$loan->status == 'returned' ? 'check-circle' : ($loan->due_date < now() ? 'exclamation-circle' : 'book' );
+                            $styleDiv="background-color:{$bgColor}; flex-shrink:0;" ;
+                            $styleIcon="color:{$iconColor}; font-size:0.8rem;" ;
+                            @endphp
+                            <div class="d-flex align-items-start gap-2 mb-3">
+                            <div class="p-2 rounded-3 mt-1" style="{{ $styleDiv }}">
+                                <i class="bi bi-{{ $icon }}" style="{{ $styleIcon }}"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="small fw-semibold">{{ $loan->member->name }}</div>
+                                <div class="text-muted" style="font-size:0.75rem;">
+                                    @if($loan->status == 'returned')
+                                    mengembalikan "{{ Str::limit($loan->book->title, 22) }}"
+                                    @elseif($loan->due_date < now())
+                                        terlambat mengembalikan "{{ Str::limit($loan->book->title, 22) }}"
+                                        @else
+                                        meminjam "{{ Str::limit($loan->book->title, 22) }}"
+                                        @endif
+                                        </div>
+                                        <div class="text-muted" style="font-size:0.72rem;">{{ $loan->created_at->format('d M Y') }}</div>
+                                </div>
+                            </div>
+                            @empty
+                            <p class="text-muted small text-center mt-4">Belum ada aktivitas.</p>
+                            @endforelse
             </div>
         </div>
     </div>
@@ -219,7 +219,9 @@
                             <td><span class="badge" style="background:#3b82f6;">{{ $book->loans_count }}x</span></td>
                         </tr>
                         @empty
-                        <tr><td colspan="4" class="text-center text-muted small">Belum ada data.</td></tr>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted small">Belum ada data.</td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -283,7 +285,12 @@
 <script>
     function updateTime() {
         const now = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
         document.getElementById('tanggal').textContent = now.toLocaleDateString('id-ID', options);
         document.getElementById('jam').textContent = now.toLocaleTimeString('id-ID');
     }
@@ -294,10 +301,12 @@
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
             datasets: [{
                 label: 'Jumlah Peminjaman',
-                data: {!! json_encode($loanChart) !!},
+                data: {
+                    !!json_encode($loanChart) !!
+                },
                 borderColor: '#3b82f6',
                 backgroundColor: 'rgba(59,130,246,0.08)',
                 tension: 0.4,
@@ -308,10 +317,26 @@
         },
         options: {
             responsive: true,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#f1f5f9' } },
-                x: { grid: { display: false } }
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    },
+                    grid: {
+                        color: '#f1f5f9'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
             }
         }
     });
