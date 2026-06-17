@@ -304,9 +304,7 @@
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
             datasets: [{
                 label: 'Jumlah Peminjaman',
-                data: {
-                    !!json_encode($loanChart) !!
-                },
+                data: { !!json_encode($loanChart) !! },
                 borderColor: '#3b82f6',
                 backgroundColor: 'rgba(59,130,246,0.08)',
                 tension: 0.4,
