@@ -27,7 +27,7 @@ class MemberController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        Member::create($request->validated());
+        Member::create($request->all());
         return redirect()->route('members.index')->with('success', 'Anggota berhasil ditambahkan!');
     }
 
@@ -45,7 +45,7 @@ class MemberController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        $member->update($request->validated());
+        $member->update($request->all());
         return redirect()->route('members.index')->with('success', 'Anggota berhasil diupdate!');
     }
 

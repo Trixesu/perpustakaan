@@ -31,7 +31,7 @@ class BookController extends Controller
             'year'        => 'required|digits:4',
         ]);
 
-        Book::create($request->validated());
+        Book::create($request->all());
         return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan!');
     }
 
@@ -52,7 +52,7 @@ class BookController extends Controller
             'year'        => 'required|digits:4',
         ]);
 
-        $book->update($request->validated());
+        $book->update($request->all());
         return redirect()->route('books.index')->with('success', 'Buku berhasil diupdate!');
     }
 
